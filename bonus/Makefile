@@ -4,14 +4,23 @@
 ## File description:
 ## Makefile
 ##
-
 SRC = draw.c \
 	main.c
 
 OBJ = $(SRC:.c=.o)
 
 all:
-	make -s -C ../src/
-	gcc -c -g -Wall -Wextra $(SRC) -I ../include/ -lcsfml-graphics
-	mv ../*.o ./
+	make -s -C src/
+	gcc -c -g -Wall -Wextra $(SRC) -I ./include/ -lcsfml-graphics
 	gcc -o window *.o -lcsfml-graphics -lcsfml-system
+
+clean:
+	rm -f *.o
+
+fclean:
+	$(MAKE) clean
+	rm -f window
+
+re:
+	$(MAKE) fclean
+	$(MAKE) all

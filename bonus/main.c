@@ -10,15 +10,49 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <SFML/System.h>
+#include <time.h>
+#include <limits.h>
 
 void draw_list(sfRenderWindow *window, array_t *array, int const type, sfRectangleShape *shape);
 int *cdl_to_int_array(c_d_linked_list_t *list, int size);
 sfColor int_to_sf_color(int color);
 int binary_search(int arr[], int l, int r, int x);
+int sf_color_to_int(sfColor color);
+
+sfColor hsv(int hue, float sat, float val)
+{
+    hue %= 360;
+    while(hue<0) hue += 360;
+
+    if(sat<0.f) sat = 0.f;
+    if(sat>1.f) sat = 1.f;
+
+    if(val<0.f) val = 0.f;
+    if(val>1.f) val = 1.f;
+
+    int h = hue/60;
+    float f = (float)(hue)/60-h;
+    float p = val*(1.f-sat);
+    float q = val*(1.f-sat*f);
+    float t = val*(1.f-sat*(1-f));
+
+    switch(h)
+    {
+        default:
+        case 0:
+        case 6: return (sfColor){val*255, t*255, p*255, 255};
+        case 1: return (sfColor){q*255, val*255, p*255, 255};
+        case 2: return (sfColor){p*255, val*255, t*255, 255};
+        case 3: return (sfColor){p*255, q*255, val*255, 255};
+        case 4: return (sfColor){t*255, p*255, val*255, 255};
+        case 5: return (sfColor){val*255, p*255, q*255, 255};
+    }
+}
 
 int pos_to_color(int pos, int size)
 {
-    return (16777215 / (size / (pos + 1)));
+    sfColor t = hsv(16777215 / ((float)size / (pos + 1)), 1.2, 1.3);
+    return sf_color_to_int(t);
 }
 
 void init_array(array_t *ar, c_d_linked_list_t *list, int size)
@@ -130,6 +164,18 @@ c_d_linked_list_t *save, array_t *l_a, array_t *l_b)
     *instructions = instructions[0]->next;
 }
 
+void print_ll_list(c_d_linked_list_t *l)
+{
+    c_d_linked_list_t *save = l;
+
+    if (!l)
+        return;
+    do {
+        printf("%d\n", l->data);
+        l = l->next;
+    } while (l != save);
+}
+
 int main(int ac, char **av)
 {
     sfRenderWindow *window = sfRenderWindow_create((sfVideoMode){800, 600, 32},
@@ -153,6 +199,7 @@ int main(int ac, char **av)
     save = 0;
     if (!instructions)
         return 84;
+    srand(time(NULL));
     sfRenderWindow_setFramerateLimit(window, 144);
     while (sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
