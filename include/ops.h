@@ -20,6 +20,12 @@ typedef struct {
 } vector_4_ptr;
 
 typedef struct {
+    int *mask;
+    char *print;
+    int *index;
+} mask_print_index;
+
+typedef struct {
     int l;
     int m;
     int r;

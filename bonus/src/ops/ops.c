@@ -56,6 +56,8 @@ char *pb_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b)
 
 char *ra_list(c_d_linked_list_t **l_a)
 {
+    if (!(*l_a))
+        return 0;
     *l_a = l_a[0]->next;
     return my_strdup("ra ");
 }

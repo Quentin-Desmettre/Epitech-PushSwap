@@ -35,17 +35,19 @@ void draw_list(sfRenderWindow *window, array_t *array, int const type, sfRectang
 {
     c_d_linked_list_t *start = array->list;
     c_d_linked_list_t *start_color = array->colors;
-    float const height = 580.0 / array->size;
+    float const height = 1060.0 / array->size;
+    float const width = 1900.0 / array->size;
     int i = 0;
-    int x = 25 + 375 * type;
+    int x = 10 + 965 * type;
 
     if (!array || !array->colors)
         return;
     do {
         sfRectangleShape_setFillColor(shape, int_to_sf_color(array->colors->data));
         sfRectangleShape_setSize(shape,
-        (sfVector2f){350.0 / (array->max / array->list->data), height});
-        sfRectangleShape_setPosition(shape, (sfVector2f){x, i * height + 10});
+        (sfVector2f){width, -500.0 / (array->max / array->list->data)});
+        sfRectangleShape_setPosition(shape,
+        (sfVector2f){i * width + 10, 10 + 520 * (type + 1)});
         sfRenderWindow_drawRectangleShape(window, shape, NULL);
         array->list = array->list->next;
         array->colors = array->colors->next;

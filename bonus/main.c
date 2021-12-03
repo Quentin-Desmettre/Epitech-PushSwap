@@ -12,18 +12,17 @@
 #include <SFML/System.h>
 #include <time.h>
 #include <limits.h>
+#include <string.h>
 
 void draw_list(sfRenderWindow *window, array_t *array, int const type, sfRectangleShape *shape);
 int *cdl_to_int_array(c_d_linked_list_t *list, int size);
 sfColor int_to_sf_color(int color);
 int binary_search(int arr[], int l, int r, int x);
 int sf_color_to_int(sfColor color);
+float get_max(c_d_linked_list_t *l);
 
-sfColor hsv(int hue, float sat, float val)
+sfColor hsv(int hue, float sat, float val, int max_val)
 {
-    hue %= 360;
-    while(hue<0) hue += 360;
-
     if(sat<0.f) sat = 0.f;
     if(sat>1.f) sat = 1.f;
 
@@ -49,9 +48,9 @@ sfColor hsv(int hue, float sat, float val)
     }
 }
 
-int pos_to_color(int pos, int size)
+int pos_to_color(int pos, int size, int max)
 {
-    sfColor t = hsv(16777215 / ((float)size / (pos + 1)), 1.2, 1.3);
+    sfColor t = hsv(360 / ((float)size / (pos + 1)), 1.2, 1.3, max);
     return sf_color_to_int(t);
 }
 
@@ -65,14 +64,14 @@ void init_array(array_t *ar, c_d_linked_list_t *list, int size)
     if (tmp)
         tim_sort(tmp, size);
     ar->colors = 0;
-    if (list)
+    if (list) {
+        max = get_max(list);
         for (int i = 0; i < size; i++) {
-            if (list->data > max)
-                max = list->data;
             append_node_c(&ar->colors,
-            pos_to_color(binary_search(tmp, 0,  size - 1, list->data), size));
+            pos_to_color(binary_search(tmp, 0,  size - 1, list->data), size, max));
             list = list->next;
         }
+    }
     ar->max = max;
 }
 
@@ -164,22 +163,10 @@ c_d_linked_list_t *save, array_t *l_a, array_t *l_b)
     *instructions = instructions[0]->next;
 }
 
-void print_ll_list(c_d_linked_list_t *l)
-{
-    c_d_linked_list_t *save = l;
-
-    if (!l)
-        return;
-    do {
-        printf("%d\n", l->data);
-        l = l->next;
-    } while (l != save);
-}
-
 int main(int ac, char **av)
 {
-    sfRenderWindow *window = sfRenderWindow_create((sfVideoMode){800, 600, 32},
-    "Push_swap", sfClose | sfResize, NULL);
+    sfRenderWindow *window = sfRenderWindow_create((sfVideoMode){1920, 1080, 32},
+    "Push_swap", sfFullscreen, NULL);
     int size = 0;
     c_d_linked_list_t *list = get_numbers(ac, av, &size);
     c_d_linked_list_t *list_b = 0;
@@ -190,8 +177,9 @@ int main(int ac, char **av)
     sfRectangleShape *shape = sfRectangleShape_create();
     c_d_linked_list_t *save;
     sfClock *clock = sfClock_create();
+    int max;
 
-    if (!list || !size || size > 580)
+    if (!list || !size)
         return 84;
     init_array(&array_a, list, size);
     init_array(&array_b, list_b, size);
@@ -201,9 +189,12 @@ int main(int ac, char **av)
         return 84;
     srand(time(NULL));
     sfRenderWindow_setFramerateLimit(window, 144);
+    max = array_a.max;
     while (sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed)
+                sfRenderWindow_close(window);
+            if (event.type == sfEvtKeyPressed && event.key.code == sfKeyEscape)
                 sfRenderWindow_close(window);
         }
         if (sfTime_asMilliseconds(sfClock_getElapsedTime(clock)) > 1000.0 / size) {
@@ -212,6 +203,8 @@ int main(int ac, char **av)
                 save = instructions->prev;
             sfClock_restart(clock);
         }
+        array_a.max = max;
+        array_b.max = max;
         sfRenderWindow_clear(window, sfBlack);
         draw_list(window, &array_a, 0, shape);
         draw_list(window, &array_b, 1, shape);
