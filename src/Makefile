@@ -16,5 +16,5 @@ OBJ = $(SRC:.c=.o)
 
 all:
 	make -s -C ops/
-	gcc -Wall -Wextra -c -g $(SRC) -I ../include/
+	gcc -Wall -Wextra -c $(SRC) -I ../include/
 	mv *.o ../

@@ -7,6 +7,15 @@
 
 #include "ops.h"
 #include <stdio.h>
+#include <string.h>
+
+void my_strcpy(char *src, char *ap)
+{
+    src[0] = ap[0];
+    src[1] = ap[1];
+    src[2] = ap[2];
+    src[3] = 0;
+}
 
 void append_node_c(c_d_linked_list_t **begin, int data)
 {
@@ -36,33 +45,47 @@ static int is_sort(c_d_linked_list_t *tab, int size)
 }
 
 static void clean_stack_b(c_d_linked_list_t **l_b, c_d_linked_list_t **l_a,
-int k, int nb_rec)
+char *print, int *index)
 {
     char *tmp;
 
     while (*l_b) {
         tmp = pa_list(l_a, l_b);
-        if (!(k + 1 < nb_rec || *l_b))
-            tmp[2] = '\n';
-        write(1, tmp, 3);
+        my_strcpy(print + *index, tmp);
+        (*index) += 3;
     }
 }
 
 static void split_stacks(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b,
-int size_a, int mask)
+int size_a, mask_print_index *mpi)
 {
     char *tmp;
 
     for (int i = 0, n = size_a; i < n; i++) {
-        if (!((*l_a)->data & mask))
+        if (!((*l_a)->data & *mpi->mask))
             tmp = pb_list(l_a, l_b);
         else
             tmp = ra_list(l_a);
-        if (i + 1 < n || *l_b)
-            write(1, tmp, 3);
-        else
-            write(1, tmp, 2);
+        my_strcpy(mpi->print + *mpi->index, tmp);
+        (*mpi->index) += 3;
+        free(tmp);
     }
+}
+
+void global_sort(c_d_linked_list_t *l_a, c_d_linked_list_t *l_b,
+mask_print_index *mpi, vector_3_int ints)
+{
+    int size_a = ints.l;
+    int nb_rec = ints.m;
+
+    simplify(l_a, size_a);
+    mpi->print[0] = 0;
+    if (!is_sort(l_a, size_a))
+        for (int k = 0; k < nb_rec; k++) {
+            split_stacks(&l_a, &l_b, size_a, mpi);
+            clean_stack_b(&l_b, &l_a, mpi->print, mpi->index);
+            *(mpi->mask) <<= 1;
+        }
 }
 
 int main(int ac, char **av)
@@ -71,18 +94,17 @@ int main(int ac, char **av)
     c_d_linked_list_t *l_a = get_numbers(ac, av, &size_a);
     c_d_linked_list_t *l_b = 0;
     int nb_rec = my_log2(size_a) + 1;
+    char *print = malloc(sizeof(char) * (size_a * nb_rec * 6 + 1));
+    int index = 0;
     int mask = 1;
+    mask_print_index mpi = {&mask, print, &index};
 
     if (!l_a || ac == 1) {
         write(2, "Error: invalid arguments\n", 25);
         return 84;
     }
-    simplify(l_a, size_a);
-    if (!is_sort(l_a, size_a))
-        for (int k = 0; k < nb_rec; k++) {
-            split_stacks(&l_a, &l_b, size_a, mask);
-            clean_stack_b(&l_b, &l_a, k, nb_rec);
-            mask <<= 1;
-        }
+    global_sort(l_a, l_b, &mpi, (vector_3_int){size_a, nb_rec, 0});
+    print[index - 1] = '\n';
+    write(1, print, index);
     return 0;
 }

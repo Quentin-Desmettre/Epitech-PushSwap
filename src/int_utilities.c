@@ -12,6 +12,8 @@ char *my_strdup(char const *str)
     char *new = malloc(sizeof(char) * 4);
 
     new[0] = str[0];
+    if (!str[1])
+        return new;
     new[1] = str[1];
     new[2] = str[2];
     new[3] = 0;
