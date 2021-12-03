@@ -46,3 +46,11 @@ int my_getnbr(char const *str, int **n)
     *n = nbr_check(str, &range, &sign);
     return *n ? 0 : 84;
 }
+
+void my_strcpy(char *src, char *ap)
+{
+    src[0] = ap[0];
+    src[1] = ap[1];
+    src[2] = ap[2];
+    src[3] = 0;
+}

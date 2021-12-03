@@ -30,6 +30,23 @@ static int is_number(char const *str)
     return contain_only(str + 1, "0123456789");
 }
 
+void append_node_c(c_d_linked_list_t **begin, int data)
+{
+    c_d_linked_list_t *new = malloc(sizeof(c_d_linked_list_t));
+
+    new->data = data;
+    if (!(*begin)) {
+        *begin = new;
+        new->next = new;
+        new->prev = new;
+        return;
+    }
+    new->next = (*begin);
+    new->prev = (*begin)->prev;
+    (*begin)->prev->next = new;
+    (*begin)->prev = new;
+}
+
 c_d_linked_list_t *get_numbers(int ac, char **av, int *size)
 {
     c_d_linked_list_t *list = 0;

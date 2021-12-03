@@ -48,5 +48,6 @@ char *pa_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b);
 char *pb_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b);
 char *ra_list(c_d_linked_list_t **l_a);
 void append_node_c(c_d_linked_list_t **begin, int data);
+void my_strcpy(char *src, char *ap);
 
 #endif

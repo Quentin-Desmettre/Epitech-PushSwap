@@ -20,7 +20,7 @@ char *my_strdup(char const *str)
     return new;
 }
 
-int *cdl_to_int_array(c_d_linked_list_t *list, int size)
+static int *cdl_to_int_array(c_d_linked_list_t *list, int size)
 {
     int *tab = malloc(sizeof(int) * size);
 
@@ -31,7 +31,7 @@ int *cdl_to_int_array(c_d_linked_list_t *list, int size)
     return tab;
 }
 
-int binary_search(int arr[], int l, int r, int x)
+static int binary_search(int arr[], int l, int r, int x)
 {
     int mid = l + (r - l) / 2;
 

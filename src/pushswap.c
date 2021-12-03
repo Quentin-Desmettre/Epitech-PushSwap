@@ -9,31 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void my_strcpy(char *src, char *ap)
-{
-    src[0] = ap[0];
-    src[1] = ap[1];
-    src[2] = ap[2];
-    src[3] = 0;
-}
-
-void append_node_c(c_d_linked_list_t **begin, int data)
-{
-    c_d_linked_list_t *new = malloc(sizeof(c_d_linked_list_t));
-
-    new->data = data;
-    if (!(*begin)) {
-        *begin = new;
-        new->next = new;
-        new->prev = new;
-        return;
-    }
-    new->next = (*begin);
-    new->prev = (*begin)->prev;
-    (*begin)->prev->next = new;
-    (*begin)->prev = new;
-}
-
 static int is_sort(c_d_linked_list_t *tab, int size)
 {
     for (int i = 0; i < size - 1; i++) {
@@ -72,7 +47,7 @@ int size_a, mask_print_index *mpi)
     }
 }
 
-void global_sort(c_d_linked_list_t *l_a, c_d_linked_list_t *l_b,
+static void global_sort(c_d_linked_list_t *l_a, c_d_linked_list_t *l_b,
 mask_print_index *mpi, vector_3_int ints)
 {
     int size_a = ints.l;
