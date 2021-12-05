@@ -10,8 +10,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <SFML/System.h>
-#include <time.h>
-#include <limits.h>
 #include <string.h>
 
 void draw_list(sfRenderWindow *window, array_t *array, int const type, sfRectangleShape *shape);
@@ -21,7 +19,7 @@ int binary_search(int arr[], int l, int r, int x);
 int sf_color_to_int(sfColor color);
 float get_max(c_d_linked_list_t *l);
 
-sfColor hsv(int hue, float sat, float val, int max_val)
+sfColor hsv(int hue, float sat, float val)
 {
     if(sat<0.f) sat = 0.f;
     if(sat>1.f) sat = 1.f;
@@ -48,9 +46,9 @@ sfColor hsv(int hue, float sat, float val, int max_val)
     }
 }
 
-int pos_to_color(int pos, int size, int max)
+int pos_to_color(int pos, int size)
 {
-    sfColor t = hsv(360 / ((float)size / (pos + 1)), 1.2, 1.3, max);
+    sfColor t = hsv(360 / ((float)size / (pos + 1)), 1.2, 1.3);
     return sf_color_to_int(t);
 }
 
@@ -68,33 +66,39 @@ void init_array(array_t *ar, c_d_linked_list_t *list, int size)
         max = get_max(list);
         for (int i = 0; i < size; i++) {
             append_node_c(&ar->colors,
-            pos_to_color(binary_search(tmp, 0,  size - 1, list->data), size, max));
+            pos_to_color(binary_search(tmp, 0,  size - 1, list->data), size));
             list = list->next;
         }
     }
     ar->max = max;
 }
 
-void get_instructions(c_d_linked_list_t **list)
+void get_instructions(c_d_linked_list_t **list, int ac, char **av)
 {
-    char tmp[3];
-    int c = 0;
+    char *ins = pushswap(ac, av);
+    char tmp[3] = {0, 0, 0};
+    int j = 0;
 
-    while (c += read(0, tmp + c, 3 - c)) {
-        if (c < 0)
-            exit(84);
-        if (c < 3)
+    if (!ins)
+        exit(84);
+    for (int i = 0; ins[i]; i++) {
+        if (ins[i] == '\n' || ins[i] == ' ') {
+            if (tmp[0] == 'r')
+                append_node_c(list, 0);
+            else if (tmp[1] == 'a')
+                append_node_c(list, 1);
+            else if (tmp[1] == 'b')
+                append_node_c(list, 2);
+            if (ins[i] == '\n')
+                return;
+            memset(tmp, 0, 3);
+            j = 0;
             continue;
-        c = 0;
-        if (tmp[0] == 'r')
-            append_node_c(list, 0);
-        else if (tmp[1] == 'a')
-            append_node_c(list, 1);
-        else
-            append_node_c(list, 2);
-        if (tmp[2] == '\n')
-            return;
+        }
+        tmp[j] = ins[i];
+        j++;
     }
+    printf("\n");
 }
 
 float get_max(c_d_linked_list_t *l)
@@ -166,7 +170,7 @@ c_d_linked_list_t *save, array_t *l_a, array_t *l_b)
 int main(int ac, char **av)
 {
     sfRenderWindow *window = sfRenderWindow_create((sfVideoMode){1920, 1080, 32},
-    "Push_swap", sfFullscreen, NULL);
+    "Push_swap", sfClose, NULL);
     int size = 0;
     c_d_linked_list_t *list = get_numbers(ac, av, &size);
     c_d_linked_list_t *list_b = 0;
@@ -183,12 +187,13 @@ int main(int ac, char **av)
         return 84;
     init_array(&array_a, list, size);
     init_array(&array_b, list_b, size);
-    get_instructions(&instructions);
+    get_instructions(&instructions, ac, av);
     save = 0;
     if (!instructions)
         return 84;
-    srand(time(NULL));
-    sfRenderWindow_setFramerateLimit(window, 144);
+    sfRenderWindow_setFramerateLimit(window, 60);
+    sfRenderWindow_requestFocus(window);
+    sfRenderWindow_setPosition(window, (sfVector2i){0, 0});
     max = array_a.max;
     while (sfRenderWindow_isOpen(window)) {
         while (sfRenderWindow_pollEvent(window, &event)) {
