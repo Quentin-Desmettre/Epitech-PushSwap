@@ -5,21 +5,22 @@
 ## Makefile
 ##
 SRC = draw.c \
-	main.c
+	main.c \
+	instruction.c
 
 OBJ = $(SRC:.c=.o)
 
 all:
 	make -s -C src/
 	gcc -c -g -Wall -Wextra $(SRC) -I ./include/ -lcsfml-graphics
-	gcc -o Push_swap *.o -lcsfml-graphics -lcsfml-system
+	gcc -o push_swap *.o -lcsfml-graphics -lcsfml-system
 
 clean:
 	rm -f *.o
 
 fclean:
 	$(MAKE) clean
-	rm -f window
+	rm -f push_swap
 
 re:
 	$(MAKE) fclean

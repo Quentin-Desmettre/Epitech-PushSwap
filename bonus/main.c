@@ -6,18 +6,6 @@
 */
 
 #include "array.h"
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <SFML/System.h>
-#include <string.h>
-
-void draw_list(sfRenderWindow *window, array_t *array, int const type, sfRectangleShape *shape);
-int *cdl_to_int_array(c_d_linked_list_t *list, int size);
-sfColor int_to_sf_color(int color);
-int binary_search(int arr[], int l, int r, int x);
-int sf_color_to_int(sfColor color);
-float get_max(c_d_linked_list_t *l);
 
 sfColor hsv(int hue, float sat, float val)
 {
@@ -73,34 +61,6 @@ void init_array(array_t *ar, c_d_linked_list_t *list, int size)
     ar->max = max;
 }
 
-void get_instructions(c_d_linked_list_t **list, int ac, char **av)
-{
-    char *ins = pushswap(ac, av);
-    char tmp[3] = {0, 0, 0};
-    int j = 0;
-
-    if (!ins)
-        exit(84);
-    for (int i = 0; ins[i]; i++) {
-        if (ins[i] == '\n' || ins[i] == ' ') {
-            if (tmp[0] == 'r')
-                append_node_c(list, 0);
-            else if (tmp[1] == 'a')
-                append_node_c(list, 1);
-            else if (tmp[1] == 'b')
-                append_node_c(list, 2);
-            if (ins[i] == '\n')
-                return;
-            memset(tmp, 0, 3);
-            j = 0;
-            continue;
-        }
-        tmp[j] = ins[i];
-        j++;
-    }
-    printf("\n");
-}
-
 float get_max(c_d_linked_list_t *l)
 {
     float max;
@@ -115,56 +75,6 @@ float get_max(c_d_linked_list_t *l)
         l = l->next;
     } while (l != save);
     return max;
-}
-
-void graphic_ra(array_t *l_a)
-{
-    ra_list(&l_a->list);
-    ra_list(&l_a->colors);
-}
-
-void graphic_pa(array_t *l_a, array_t *l_b)
-{
-    int tmp;
-
-    if (!l_b->list)
-        return;
-    tmp = l_b->list->data; 
-    pa_list(&l_a->list, &l_b->list);
-    if (tmp == (int)l_b->max)
-        l_b->max = get_max(l_b->list);
-    if (tmp > l_a->max)
-        l_a->max = tmp;
-    pa_list(&l_a->colors, &l_b->colors);
-}
-
-void graphic_pb(array_t *l_a, array_t *l_b)
-{
-    int tmp;
-
-    if (!l_a->list)
-        return;
-    tmp = l_a->list->data; 
-    pb_list(&l_a->list, &l_b->list);
-    if (tmp == (int)l_a->max)
-        l_a->max = get_max(l_a->list);
-    if (tmp > l_b->max)
-        l_b->max = tmp;
-    pb_list(&l_a->colors, &l_b->colors);
-}
-
-void do_instruction(c_d_linked_list_t **instructions,
-c_d_linked_list_t *save, array_t *l_a, array_t *l_b)
-{
-    void (*fnc[3])() = {&graphic_ra, &graphic_pa, &graphic_pb};
-
-    if (*instructions == save)
-        return;
-    if (instructions[0]->data == 0)
-        fnc[0](l_a);
-    else
-        fnc[instructions[0]->data](l_a, l_b);
-    *instructions = instructions[0]->next;
 }
 
 int main(int ac, char **av)
