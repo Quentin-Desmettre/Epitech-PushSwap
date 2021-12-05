@@ -12,7 +12,7 @@ OBJ = $(SRC:.c=.o)
 all:
 	make -s -C src/
 	gcc -c -g -Wall -Wextra $(SRC) -I ./include/ -lcsfml-graphics
-	gcc -o window *.o -lcsfml-graphics -lcsfml-system
+	gcc -o Push_swap *.o -lcsfml-graphics -lcsfml-system
 
 clean:
 	rm -f *.o
