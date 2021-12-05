@@ -21,12 +21,18 @@ typedef struct {
 } vector_4_ptr;
 
 typedef struct {
+    int *mask;
+    char *print;
+    int *index;
+} mask_print_index;
+
+typedef struct {
     int l;
     int m;
     int r;
 } vector_3_int;
 
-typedef struct c_d_linked_list_t{
+typedef struct c_d_linked_list_t {
     int data;
     struct c_d_linked_list_t *next;
     struct c_d_linked_list_t *prev;
@@ -43,5 +49,8 @@ char *pa_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b);
 char *pb_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b);
 char *ra_list(c_d_linked_list_t **l_a);
 void append_node_c(c_d_linked_list_t **begin, int data);
+char *pushswap(int ac, char **av);
+int is_sort(c_d_linked_list_t *tab, int size);
+void my_strcpy(char *src, char *ap);
 
 #endif
