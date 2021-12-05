@@ -51,7 +51,7 @@ void simplify(c_d_linked_list_t *l_a, int size)
 
     tim_sort(copy, size);
     for (int i = 0; i < size; i++) {
-        l_a->data = binary_search(copy, 0,  size - 1, l_a->data);
+        l_a->data = binary_search(copy, 0, size - 1, l_a->data);
         l_a = l_a->next;
     }
 }

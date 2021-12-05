@@ -28,9 +28,9 @@ static void pop(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b)
 
     if (!(l_b[0]))
         return;
-    if (l_b[0]->next == l_b[0])
+    if (l_b[0]->next == l_b[0]) {
         *l_b = 0;
-    else {
+    } else {
         l_b[0]->prev->next = l_b[0]->next;
         l_b[0]->next->prev = l_b[0]->prev;
         *l_b = l_b[0]->next;

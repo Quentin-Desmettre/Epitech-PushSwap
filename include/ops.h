@@ -31,7 +31,7 @@ typedef struct {
     int r;
 } vector_3_int;
 
-typedef struct c_d_linked_list_t{
+typedef struct c_d_linked_list_t {
     int data;
     struct c_d_linked_list_t *next;
     struct c_d_linked_list_t *prev;
