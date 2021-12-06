@@ -55,12 +55,15 @@ mask_print_index *mpi, vector_3_int ints)
 
     simplify(l_a, size_a);
     mpi->print[0] = 0;
-    if (!is_sort(l_a, size_a))
+    mpi->print[1] = 0;
+    if (!is_sort(l_a, size_a)) {
         for (int k = 0; k < nb_rec; k++) {
             split_stacks(&l_a, &l_b, size_a, mpi);
             clean_stack_b(&l_b, &l_a, mpi->print, mpi->index);
             *(mpi->mask) <<= 1;
         }
+    } else
+        *mpi->index = 1;
 }
 
 int main(int ac, char **av)
