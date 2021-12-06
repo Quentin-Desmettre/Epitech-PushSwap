@@ -16,10 +16,10 @@ static void insertion_sort(int *arr, int left, int right)
         temp = arr[i];
         j = i - 1;
         while (j >= left && arr[j] > temp) {
-            arr[j+1] = arr[j];
+            arr[j + 1] = arr[j];
             j--;
         }
-        arr[j+1] = temp;
+        arr[j + 1] = temp;
     }
 }
 

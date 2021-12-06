@@ -42,6 +42,7 @@ int my_getnbr(char const *str, int **n)
 {
     int sign = 1;
     int range = 0;
+
     sign_check(&sign, str, &range);
     *n = nbr_check(str, &range, &sign);
     return *n ? 0 : 84;
@@ -53,4 +54,9 @@ void my_strcpy(char *src, char *ap)
     src[1] = ap[1];
     src[2] = ap[2];
     src[3] = 0;
+}
+
+void test()
+{
+    printf("test");
 }
