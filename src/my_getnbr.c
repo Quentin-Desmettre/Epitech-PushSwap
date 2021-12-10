@@ -55,8 +55,3 @@ void my_strcpy(char *src, char *ap)
     src[2] = ap[2];
     src[3] = 0;
 }
-
-void test()
-{
-    printf("test");
-}
