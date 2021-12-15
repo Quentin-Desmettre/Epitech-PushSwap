@@ -43,7 +43,6 @@ int size_a, mask_print_index *mpi)
             tmp = ra_list(l_a);
         my_strcpy(mpi->print + *mpi->index, tmp);
         (*mpi->index) += 3;
-        free(tmp);
     }
 }
 

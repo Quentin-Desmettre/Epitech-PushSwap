@@ -41,21 +41,21 @@ static void pop(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b)
 char *pa_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b)
 {
     if (*l_b == 0)
-        return my_strdup("");
+        return "";
     pop(l_a, l_b);
-    return my_strdup("pa ");
+    return "pa ";
 }
 
 char *pb_list(c_d_linked_list_t **l_a, c_d_linked_list_t **l_b)
 {
     if (*l_a == 0)
-        return my_strdup("");
+        return "";
     pop(l_b, l_a);
-    return my_strdup("pb ");
+    return "pb ";
 }
 
 char *ra_list(c_d_linked_list_t **l_a)
 {
     *l_a = l_a[0]->next;
-    return my_strdup("ra ");
+    return "ra ";
 }

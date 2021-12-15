@@ -10,5 +10,5 @@ SRC = ops.c
 OBJ = $(SRC:.c=.o)
 
 all:
-	gcc -Wall -Wextra -c $(SRC) -I ../../include/
+	gcc -c $(SRC) -I ../../include/
 	mv $(OBJ) ../../
